@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class King extends Piece {
 
-	private boolean hasMoved;
 	private Point[] moves = {
 			new Point(1, 0),
 			new Point(-1, 0),
@@ -13,15 +12,16 @@ public class King extends Piece {
 			new Point(-1, 1),
 			new Point(-1, -1)
 		};
+	private boolean hasMoved;
 
 	public King(int x, int y, boolean color) {
 		super(x, y, color);
 
-		hasMoved = false;
 		for (int i = 0; i < 8; i++) {
 			possible.add(new Point(0, 0));
 		}
 		updatePossibleMoves();
+		hasMoved = false;
 	}
 
 	public void updatePossibleMoves() {

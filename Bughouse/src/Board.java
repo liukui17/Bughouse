@@ -21,29 +21,43 @@ public class Board {
 		}
 		if (board[dy][dx] != null)
 			capture(dx, dy);
-		board[dy][dx] = board[y][x];
-		board[y][x] = null;
-		board[dy][dx].updatePosition(dx, dy);
-		board[dy][dx].updatePossibleMoves();
+		if (board[y][x].toString().equals("K") && dx - x == 2) {
+			queenSide(x, y);
+		} else if (board[y][x].toString().equals("K") && dx - x == -2) {
+			kingSide(x, y);
+		} else {
+			board[dy][dx] = board[y][x];
+			board[y][x] = null;
+			board[dy][dx].updatePosition(dx, dy);
+			board[dy][dx].updatePossibleMoves();
+		}
 	}
 
-	private void kingSide(int x, int y, int dx, int dy) {
+	private void kingSide(int x, int y) {
 		if (board[y - 1][x] == null && board[y - 2][x] == null && 
 				board[0][x] != null && board[0][x].toString().equals("R")) {
 			board[y - 2][x] = board[y][x];
 			board[y][x] = null;
 			board[y - 1][x] = board[0][x];
 			board[0][x] = null;
+			board[y - 2][x].updatePosition(y - 2, x);
+			board[y - 2][x].updatePossibleMoves();
+			board[y - 1][x].updatePosition(y - 1, x);
+			board[y - 1][x].updatePossibleMoves();
 		}
 	}
 
-	private void queenSize(int x, int y, int dx, int dy) {
+	private void queenSide(int x, int y) {
 		if (board[y + 1][x] == null && board[y + 2][x] == null && board[y + 3][x] == null &&
 				board[7][x] != null && board[7][x].toString().equals("R")) {
 			board[y + 2][x] = board[y][x];
 			board[y][x] = null;
 			board[y + 1][x] = board[7][x];
 			board[7][x] = null;
+			board[y + 2][x].updatePosition(y - 2, x);
+			board[y + 2][x].updatePossibleMoves();
+			board[y + 1][x].updatePosition(y - 1, x);
+			board[y + 1][x].updatePossibleMoves();
 		}
 	}
 
@@ -165,7 +179,9 @@ public class Board {
 		return (0 <= x) && (x <= 7) && (0 <= y) && (x <= 7);
 	}
 
-	public String getBoard() {
+	public Piece[][] getBoard() { return board; }
+
+	public String toString() {
 		StringBuffer b = new StringBuffer();
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -184,7 +200,7 @@ public class Board {
 	}
 
 	public void printBoard() {
-		System.out.println(getBoard());
+		System.out.println(toString());
 	}
 
 	public static void main(String[] args) {
