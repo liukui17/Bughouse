@@ -12,7 +12,6 @@ public class King extends Piece {
 			new Point(-1, 1),
 			new Point(-1, -1)
 		};
-	private boolean hasMoved;
 
 	public King(int x, int y, boolean color) {
 		super(x, y, color);
@@ -21,14 +20,12 @@ public class King extends Piece {
 			possible.add(new Point(0, 0));
 		}
 		updatePossibleMoves();
-		hasMoved = false;
 	}
 
 	public void updatePossibleMoves() {
 		for (int i = 0; i < moves.length; i++) {
 			possible.get(i).setPoint(position.getX() + moves[i].getX(), position.getY() + moves[i].getY());
 		}
-		hasMoved = true;
 	}
 
 	public boolean isPossible(int x, int y) {

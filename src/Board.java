@@ -17,7 +17,8 @@ public class Board {
 
 	public void move(int x, int y, int dx, int dy) {
 		if (!valid(x, y, dx, dy)) {
-			throw new IllegalArgumentException("Invalid Move!");
+			System.out.println("Invalid Move!");
+			return;
 		}
 		if (board[dy][dx] != null)
 			capture(dx, dy);
@@ -34,30 +35,34 @@ public class Board {
 	}
 
 	private void kingSide(int x, int y) {
-		if (board[y - 1][x] == null && board[y - 2][x] == null && 
-				board[0][x] != null && board[0][x].toString().equals("R")) {
-			board[y - 2][x] = board[y][x];
+		if (board[y][x - 1] == null && board[y][x - 2] == null && board[y][0] != null &&
+				board[y][0].toString().equals("R") && !board[y][0].moved()) {
+			board[y][x - 2] = board[y][x];
 			board[y][x] = null;
-			board[y - 1][x] = board[0][x];
-			board[0][x] = null;
-			board[y - 2][x].updatePosition(y - 2, x);
-			board[y - 2][x].updatePossibleMoves();
-			board[y - 1][x].updatePosition(y - 1, x);
-			board[y - 1][x].updatePossibleMoves();
+			board[y][x - 1] = board[y][0];
+			board[y][0] = null;
+			board[y][x - 2].updatePosition(x - 2, y);
+			board[y][x - 2].updatePossibleMoves();
+			board[y][x - 1].updatePosition(x - 1, y);
+			board[y][x - 1].updatePossibleMoves();
+		} else {
+			System.out.println("Can't castle.");
 		}
 	}
 
 	private void queenSide(int x, int y) {
-		if (board[y + 1][x] == null && board[y + 2][x] == null && board[y + 3][x] == null &&
-				board[7][x] != null && board[7][x].toString().equals("R")) {
-			board[y + 2][x] = board[y][x];
+		if (board[y][x + 1] == null && board[y][x + 2] == null && board[y][x + 3] == null &&
+				board[y][7] != null && board[y][7].toString().equals("R") && !board[y][7].moved()) {
+			board[y][x + 2] = board[y][x];
 			board[y][x] = null;
-			board[y + 1][x] = board[7][x];
-			board[7][x] = null;
-			board[y + 2][x].updatePosition(y - 2, x);
-			board[y + 2][x].updatePossibleMoves();
-			board[y + 1][x].updatePosition(y - 1, x);
-			board[y + 1][x].updatePossibleMoves();
+			board[y][x + 1] = board[y][7];
+			board[y][7] = null;
+			board[y][x + 2].updatePosition(x + 2, y);
+			board[y][x + 2].updatePossibleMoves();
+			board[y][x + 1].updatePosition(x + 1, y);
+			board[y][x + 1].updatePossibleMoves();
+		} else {
+			System.out.println("Can't castle.");
 		}
 	}
 
@@ -74,8 +79,8 @@ public class Board {
 		if (!inBounds(x, y) || !inBounds(dx, dy) || board[y][x] == null || !board[y][x].isPossible(dx, dy)) {
 			return false;
 		} else {
-			if (board[y][x].toString().equals("K") || board[y][x].toString().equals("H")) {
-				return !kkBlocked(x, y, dx, dy);
+			if (board[y][x].toString().equals("K") || board[y][x].toString().equals("N")) {
+				return !knBlocked(x, y, dx, dy);
 			} else if (board[y][x].toString().equals("B")) {
 				return !bishBlocked(x, y, dx, dy);
 			} else if (board[y][x].toString().equals("Q")) {
@@ -99,13 +104,13 @@ public class Board {
 	private boolean rookBlocked(int x, int y, int dx, int dy) {
 		int incX = 0;
 		int incY = 0;
-		int tx = x + incX;
-		int ty = y + incY;
 		if (dx - x != 0) {
 			incX = (dx - x) / (Math.abs(dx - x));
 		} else {
 			incY = (dy - y) / (Math.abs(dy - y));
 		}
+		int tx = x + incX;
+		int ty = y + incY;
 		while (tx != dx || ty != dy) {
 			if (board[ty][tx] != null) {
 				return false;
@@ -113,7 +118,7 @@ public class Board {
 			tx += incX;
 			ty += incY;
 		}
-		return board[dy][dx] != null && !(board[dy][dx].boolColor() ^ board[y][x].boolColor());
+		return !(board[dy][dx] == null || board[dy][dx].boolColor() ^ board[y][x].boolColor());
 	}
 
 	private boolean bishBlocked(int x, int y, int dx, int dy) {
@@ -128,10 +133,10 @@ public class Board {
 			tx += incX;
 			ty += incY;
 		}
-		return board[dy][dx] != null && !(board[dy][dx].boolColor() ^ board[y][x].boolColor()); 
+		return !(board[dy][dx] == null || board[dy][dx].boolColor() ^ board[y][x].boolColor());
 	}
 	
-	private boolean kkBlocked(int x, int y, int dx, int dy) {
+	private boolean knBlocked(int x, int y, int dx, int dy) {
 		return !(board[dy][dx] == null || board[dy][dx].boolColor() ^ board[y][x].boolColor());
 	}
 
@@ -203,6 +208,18 @@ public class Board {
 		System.out.println(toString());
 	}
 
+	// for now, do 10 moves
+	public void run(Scanner scan) {
+		for (int i = 0; i < 10; i++) {
+			int x = scan.nextInt();
+			int y =scan.nextInt();
+			int dx = scan.nextInt();
+			int dy = scan.nextInt();
+			move(x, y, dx, dy);
+			printBoard();
+		}
+	}
+
 	public static void main(String[] args) {
 		Random r = new Random();
 		Board b = new Board();
@@ -211,23 +228,7 @@ public class Board {
 		b.beginning();
 		b.printBoard();
 
-/*		int x = scan.nextInt();
-		int y = scan.nextInt();
-		int dx = scan.nextInt();
-		int dy = scan.nextInt();
-
-		System.out.println(b.board[y][x].getPosition().toString());
-		b.move(x, y, dx, dy);
-		b.printBoard(); */
-
-		for (int i = 0; i < 10; i++) {
-			int x = scan.nextInt();
-			int y = scan.nextInt();
-			int dx = scan.nextInt();
-			int dy = scan.nextInt();
-			b.move(x, y, dx, dy);
-			b.printBoard();
-		} 
+		b.run(scan);
 	} 
 }
 

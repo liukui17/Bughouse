@@ -34,6 +34,6 @@ public class Knight extends Piece {
 		return (absX == 1 && absY == 2) || (absX == 2 && absY == 1);
 	}
 
-	public String toString() { return "H"; }
+	public String toString() { return "N"; }
 
 }

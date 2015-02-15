@@ -3,11 +3,9 @@ import java.util.ArrayList;
 public class Pawn extends Piece {
 
 	private Point[] moves;
-	protected boolean isFirst;
 
 	public Pawn(int x, int y, boolean color) {
 		super(x, y, color);
-		isFirst = true;
 
 		moves = new Point[3];
 		if (color) {
@@ -39,7 +37,6 @@ public class Pawn extends Piece {
 		if (possible.size() == 4 && (position.getX() != oldx || position.getY() != oldy)) {
 			possible.remove(3);
 		}
-		isFirst = false;
 	}
 
 	public void updatePossibleMoves() {
@@ -52,11 +49,11 @@ public class Pawn extends Piece {
 		if (color) {
 			return Math.abs(position.getX() - x) <= 1  && 
 				   (position.getY() - y == -1 || 
-				   (isFirst && position.getY() - y == -2));
+				   (!hasMoved && position.getY() - y == -2));
 		} else {
 			return Math.abs(position.getX() - x) <= 1 &&
 			       (position.getY() - y == 1 || 
-				   (isFirst && position.getY() - y == 2));
+				   (!hasMoved && position.getY() - y == 2));
 		}
 	}
 
