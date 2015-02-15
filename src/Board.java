@@ -35,9 +35,9 @@ public class Board {
 	//                        Pawns move two squares if not moved yet - legal
 	//                        En passant - illegal
 	//                        King moving into check - legal
-	public boolean move(boolean player, int x, int y, int dx, int dy) 
+	public boolean move(int x, int y, int dx, int dy) 
 			throws InvalidMoveException, NotYourTurnException {
-		if (turn != board[y][x].boolColor()) {
+		if (board[y][x] != null && turn != board[y][x].boolColor()) {
 			throw new NotYourTurnException();
 		}
 		if (!valid(x, y, dx, dy)) {
@@ -419,7 +419,7 @@ public class Board {
 				int dx = scan.nextInt();
 				int dy = scan.nextInt();
 				try {
-					worked = move(turn, x, y, dx, dy);
+					worked = move(x, y, dx, dy);
 				} catch (InvalidMoveException im) {
 					System.err.println("You entered an invalid move.");
 				} catch (NotYourTurnException nyt) {

@@ -32,13 +32,15 @@ public class BugHouseServer {
 		BugHouseServer gui = new BugHouseServer(portNum);
 
 		String input = "";
-		while ((input = gui.in.readLine()) != null) {
+		while (true) {
+			input = gui.in.readLine();
+			System.out.println(input);
 			String[] movesStr = input.split(" ");
 			int[] movesInt = {Integer.parseInt(movesStr[0]),
 							  Integer.parseInt(movesStr[1]),
 							  Integer.parseInt(movesStr[2]),
 							  Integer.parseInt(movesStr[3])};
-			gui.game.move(!gui.color, movesInt[0], movesInt[1], movesInt[2], movesInt[3]);
+			gui.game.move(movesInt[0], movesInt[1], movesInt[2], movesInt[3]);
 			gui.drawBoard();			
 		} 
 	}
@@ -52,7 +54,7 @@ public class BugHouseServer {
 		out = new PrintWriter(clientSocket.getOutputStream(), true);
 		in = new BufferedReader(
 			new InputStreamReader(clientSocket.getInputStream()));
-		stdIn = new BufferedReader(new InputStreamReader(System.in));
+//		stdIn = new BufferedReader(new InputStreamReader(System.in));
 
 		frame = new JFrame(); // make frame
 
@@ -65,7 +67,7 @@ public class BugHouseServer {
 		prev = null;
 		
 		// set-up frame
-		frame.setTitle("BugHouse");
+		frame.setTitle("BugHouse Host");
 		frame.setSize(800, 800);
 //		frame.setLayout(new FlowLayout());
 		frame.setLocation(50, 100);
@@ -153,15 +155,15 @@ public class BugHouseServer {
 					
 				} else if (prev != null) {
 					try { 
-						if (game.move(color, prev.y, prev.x, source.y, source.x)) { // move
+						if (game.move(prev.y, prev.x, source.y, source.x)) { // move
 							//moving = !moving;
 							deselect(source);
 							if (game.canPromote(source.y, source.x)) {
 								game.promotion(game.getBoard()[source.x][source.y].boolColor(), source.y, source.x, 
 											   JOptionPane.showInputDialog(null, "What would you like to promote to?"));
 							}
-							out.println(prev.x + " " + prev.y + " " + source.x + " " + source.y);
 							drawBoard();
+							out.println(prev.x + " " + prev.y + " " + source.x + " " + source.y);
 						}
 					} catch (InvalidMoveException e) { // invalid move
 						JOptionPane.showMessageDialog(null, "Invalid Move. Try Again");
@@ -172,6 +174,7 @@ public class BugHouseServer {
 						deselect(prev);
 						// prev = null;
 					} catch (Exception e) { // unknown exception
+						deselect(prev);
 						JOptionPane.showMessageDialog(null, "Unknown exception: REALLY BAD");
 					}
 				} 
