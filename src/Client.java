@@ -4,6 +4,7 @@ import java.io.*;
 public class Client {
 	public static void main(String[] args) 
 			throws IOException {
+		// IP: 173.250.181.224
 		String hostName = args[0];
 		int portNumber = Integer.parseInt(args[1]);
 
@@ -14,10 +15,12 @@ public class Client {
 				new InputStreamReader(echoSocket.getInputStream()));
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 		) {
-			String input;
-			while ((input = stdIn.readLine()) != null) {
-				out.println(input);
+			String input = "";
+			while (!input.equals("quit")) {
+//				String read = in.readLine();
 				System.out.println(in.readLine());
+				input = stdIn.readLine();
+				out.println(input);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
