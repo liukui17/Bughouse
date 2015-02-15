@@ -25,6 +25,8 @@ public class Board {
 		turn = true;
 	}
 
+	public boolean getTurn() { return turn; }
+
 	//Moves the piece at board[y][x] to board[dy][dx] and returns true if the move is legal,
 	// else does nothing and returns false.
 	// Special cases to note: Castling - legal, requires the king and rook not moved yet,
