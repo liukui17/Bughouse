@@ -102,7 +102,8 @@ public class Gui {
 				} else if (prev != null) {
 					try { 
 						if (game.move(game.turn, prev.y, prev.x, source.y, source.x)) { // move
-							moving = !moving;
+							//moving = !moving;
+							deselect(source);
 							drawBoard();
 						}
 					} catch (InvalidMoveException e) { // invalid move
