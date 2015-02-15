@@ -82,22 +82,6 @@ public class Gui {
 		
 		changeBorder(game.turn);
 		
-//		JPanel west = new JPanel();
-//		west.setBackground(Color.BLACK);
-//		frame.add(west, BorderLayout.WEST);
-//		
-//		JPanel north = new JPanel();
-//		north.setBackground(Color.BLACK);
-//		frame.add(north, BorderLayout.NORTH);
-//		
-//		JPanel east = new JPanel();
-//		east.setBackground(Color.BLACK);
-//		frame.add(east, BorderLayout.EAST);
-//		
-//		JPanel south = new JPanel();
-//		south.setBackground(Color.BLACK);
-//		frame.add(south, BorderLayout.SOUTH);
-		
 		frame.add(buttons, BorderLayout.CENTER);
 		
 		frame.revalidate();
@@ -143,6 +127,10 @@ public class Gui {
 						if (game.move(game.turn, prev.y, prev.x, source.y, source.x)) { // move
 							//moving = !moving;
 							deselect(source);
+							if (game.canPromote(source.y, source.x)) {
+								game.promotion(game.getBoard()[source.x][source.y].boolColor(), source.y, source.x, 
+											   JOptionPane.showInputDialog(null, "What would you like to promote to?"));
+							}
 							drawBoard();
 						}
 					} catch (InvalidMoveException e) { // invalid move
@@ -160,13 +148,13 @@ public class Gui {
 			}
 		}
 		
-		private void deselect(ChessButton source) {
+		private void deselect(ChessButton target) {
 			moving = !moving;
-			if ((source.x % 2 == 0 && source.y % 2 != 0) || 
-				(source.x % 2 != 0 && source.y % 2 == 0)) {
-				source.setBackground(DARK_SPACES);
+			if ((target.x % 2 == 0 && target.y % 2 != 0) || 
+				(target.x % 2 != 0 && target.y % 2 == 0)) {
+				target.setBackground(DARK_SPACES);
 			} else {
-				source.setBackground(LIGHT_SPACES);
+				target.setBackground(LIGHT_SPACES);
 			}
 			prev = null;
 		}
