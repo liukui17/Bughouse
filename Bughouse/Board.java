@@ -30,25 +30,60 @@ public class Board {
 			return false;
 		} else {
 			if (board[y][x].toString().equals("K") || board[y][x].toString().equals("H")) {
-				return kkBlocked(x, y, dx, dy);
+				return !kkBlocked(x, y, dx, dy);
 			} else if (board[y][x].toString().equals("B")) {
-				return true;
+				return !bishBlocked(x, y, dx, dy);
 			} else if (board[y][x].toString().equals("Q")) {
-				return true;	
+				return !queenBlocked(x, y, dx, dy);
 			} else if (board[y][x].toString().equals("R")) {
-				return true;
+				return !rookBlocked(x, y, dx, dy);
 			} else {
 				return !pawnBlocked(x, y, dx, dy);
 			}
 		}
 	}
 
-	private boolean rookBlocked(int x, int y, int dx, int dy) {
+	private boolean queenBlocked(int x, int y, int dx, int dy) {
+		if (Math.abs(dx - x) == Math.abs(dy - y)) {
+			return bishBlocked(x, y, dx, dy);
+		} else {
+			return rookBlocked(x, y, dx, dy);
+		}
+	}
 
+	private boolean rookBlocked(int x, int y, int dx, int dy) {
+		int incX = 0;
+		int incY = 0;
+		int tx = x + incX;
+		int ty = y + incY;
+		if (dx - x != 0) {
+			incX = (dx - x) / (Math.abs(dx - x));
+		} else {
+			incY = (dy - y) / (Math.abs(dy - y));
+		}
+		while (tx != dx || ty != dy) {
+			if (board[ty][tx] != null) {
+				return false;
+			}
+			tx += incX;
+			ty += incY;
+		}
+		return board[dy][dx] != null && !(board[dy][dx].boolColor() ^ board[y][x].boolColor());
 	}
 
 	private boolean bishBlocked(int x, int y, int dx, int dy) {
-
+		int incX = (dx - x) / (Math.abs(dx - x));
+		int incY = (dy - y) / (Math.abs(dy - y));
+		int tx = x + incX;
+		int ty = y + incY;
+		while (tx != dx || ty != dy) {
+			if (board[ty][tx] != null) {
+				return false;
+			}
+			tx += incX;
+			ty += incY;
+		}
+		return board[dy][dx] != null && !(board[dy][dx].boolColor() ^ board[y][x].boolColor()); 
 	}
 	
 	private boolean kkBlocked(int x, int y, int dx, int dy) {
