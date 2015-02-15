@@ -17,12 +17,13 @@ public class Piece {
 	}
 
 	public void updatePosition(int x, int y) {
-		for (Point p : possible) {
+/*		for (Point p : possible) {
 			if (p.getX() == x && p.getY() == y) {
 				position.setPoint(x, y);
 				break;
 			}
-		}
+		} */
+		position.setPoint(x, y);
 		hasMoved = true;
 	} 
 
