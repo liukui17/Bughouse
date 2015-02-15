@@ -1,0 +1,28 @@
+Color:
+	1 (True) denotes white
+	0 (False) denotes black
+
+Board:
+				White
+
+	R   H   B   K   Q   B   H   R
+
+	P   P   P   P   P   P   P   P
+
+	x   x   x   x   x   x   x   x
+
+	x   x   x   x   x   x   x   x
+
+	x   x   x   x   x   x   x   x
+
+	x   x   x   x   x   x   x   x
+
+	P   P   P   P   P   P   P   P
+
+	R   H   B   K   Q   B   H   R
+
+				Black
+
+	Represented by two-dimensional array. Upper left corner is (0,0) and 
+	bottom right corner is (7,7)
+
