@@ -27,16 +27,32 @@ public class Board {
 		board[dy][dx].updatePossibleMoves();
 	}
 
-	private void castle(int x, int y, int dx, int dy) {
+	private void kingSide(int x, int y, int dx, int dy) {
+		if (board[y - 1][x] == null && board[y - 2][x] == null && 
+				board[0][x] != null && board[0][x].toString().equals("R")) {
+			board[y - 2][x] = board[y][x];
+			board[y][x] = null;
+			board[y - 1][x] = board[0][x];
+			board[0][x] = null;
+		}
+	}
 
+	private void queenSize(int x, int y, int dx, int dy) {
+		if (board[y + 1][x] == null && board[y + 2][x] == null && board[y + 3][x] == null &&
+				board[7][x] != null && board[7][x].toString().equals("R")) {
+			board[y + 2][x] = board[y][x];
+			board[y][x] = null;
+			board[y + 1][x] = board[7][x];
+			board[7][x] = null;
+		}
 	}
 
 	private void capture(int x, int y) {
 		boolean pcolor = board[y][x].boolColor();
 		if (pcolor) {
-			whiteGrave.put(board[y][x]);
+			whiteGrave.add(board[y][x]);
 		} else {
-			blackGrave.put(board[y][x]);
+			blackGrave.add(board[y][x]);
 		}
 	}
 
@@ -117,7 +133,9 @@ public class Board {
 	public void beginning() {
 		for (int i = 0; i < 8; i++) {
 			board[1][i] = new Pawn(i, 1, true);
+			whiteActive.add(board[1][i]);
 			board[6][i] = new Pawn(i, 6, false);
+			blackActive.add(board[6][i]);
 		}
 		for (int i = 0; i < 8; i++) {
 			if (i == 0 || 7 - i == 0) {
@@ -138,6 +156,8 @@ public class Board {
 					board[7][i] = new King(i, 7, false);
 				}
 			}
+			whiteActive.add(board[0][i]);
+			blackActive.add(board[7][i]);
 		}
 	}
 
