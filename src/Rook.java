@@ -9,6 +9,7 @@ public class Rook extends Piece {
 			possible.add(new Point(0, 0));
 		}
 		updatePossibleMoves();
+		imagePath = imagePath + "_rook.png";
 	}
 
 	public void updatePossibleMoves() {

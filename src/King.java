@@ -20,6 +20,7 @@ public class King extends Piece {
 			possible.add(new Point(0, 0));
 		}
 		updatePossibleMoves();
+		imagePath = imagePath + "_king.png";
 	}
 
 	public void updatePossibleMoves() {

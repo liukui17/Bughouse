@@ -28,6 +28,7 @@ public class Pawn extends Piece {
 		} else {
 			possible.add(new Point(position.getX(), position.getY() - 2));
 		} 
+		imagePath = imagePath + "_pawn.png";
 	}
 
 	public void updatePosition(int x, int y) {
