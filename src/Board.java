@@ -54,14 +54,16 @@ public class Board {
 			board[y][x] = null;
 			board[dy][dx].updatePosition(dx, dy);
 			board[dy][dx].updatePossibleMoves();
-			if (board[dy][dx].toString().equals("P")) {
-				if (dy == 7 || dy == 0) {
-					promotion(board[dy][dx].boolColor(), dx, dy);
-				}
+			if (canPromote(dx, dy)) {
+				promotion(board[dy][dx].boolColor(), dx, dy);
 			}
 			turn = !turn;
 		}
 		return true;
+	}
+
+	public boolean canPromote(int dx, int dy) {
+		return board[dy][dx].toString().equals("P") && (dy == 7 || dy == 0);
 	}
 
 	private void promotion(boolean color, int dx, int dy) {
@@ -181,7 +183,7 @@ public class Board {
 		int ty = y + incY;
 		while (tx != dx || ty != dy) {
 			if (board[ty][tx] != null) {
-				return false;
+				return true;
 			}
 			tx += incX;
 			ty += incY;
@@ -200,7 +202,7 @@ public class Board {
 		int ty = y + incY;
 		while (tx != dx || ty != dy) {
 			if (board[ty][tx] != null) {
-				return false;
+				return true;
 			}
 			tx += incX;
 			ty += incY;

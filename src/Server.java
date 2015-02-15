@@ -3,7 +3,6 @@ import java.io.*;
 
 public class Server {
 	public static void main(String[] args) {
-		// IP: 173.250.181.224
 		int port = Integer.parseInt(args[0]);
 
 		try (
@@ -16,7 +15,6 @@ public class Server {
 		) {
 			String input = "";
 			while (!input.equals("quit")) {
-//				String read = in.readLine();
 				input = stdIn.readLine();
 				out.println(input);
 				System.out.println(in.readLine());				

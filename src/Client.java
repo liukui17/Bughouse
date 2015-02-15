@@ -4,7 +4,6 @@ import java.io.*;
 public class Client {
 	public static void main(String[] args) 
 			throws IOException {
-		// IP: 173.250.181.224
 		String hostName = args[0];
 		int portNumber = Integer.parseInt(args[1]);
 
@@ -17,7 +16,6 @@ public class Client {
 		) {
 			String input = "";
 			while (!input.equals("quit")) {
-//				String read = in.readLine();
 				System.out.println(in.readLine());
 				input = stdIn.readLine();
 				out.println(input);
