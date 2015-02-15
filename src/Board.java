@@ -35,11 +35,11 @@ public class Board {
 	//                        King moving into check - legal
 	public boolean move(boolean player, int x, int y, int dx, int dy) 
 			throws InvalidMoveException, NotYourTurnException {
-		if (!valid(x, y, dx, dy)) {
-			throw new InvalidMoveException();
-		}
 		if (turn != board[y][x].boolColor()) {
 			throw new NotYourTurnException();
+		}
+		if (!valid(x, y, dx, dy)) {
+			throw new InvalidMoveException();
 		}
 		if (board[dy][dx] != null)
 			capture(dx, dy);

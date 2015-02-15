@@ -17,6 +17,9 @@ public class Server {
 			while ((input = stdIn.readLine()) != null) {
 				out.println(input);
 				System.out.println(in.readLine());
+				if (input == quit) {
+					return;
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
