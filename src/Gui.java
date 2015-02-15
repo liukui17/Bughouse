@@ -37,7 +37,8 @@ public class Gui {
 		// set-up frame
 		frame.setTitle("BugHouse");
 		frame.setSize(800, 800);
-		frame.setLayout(new FlowLayout());
+		// frame.setLayout(new FlowLayout());
+		frame.setLayout(new BorderLayout());
 		frame.setLocation(50, 100);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -78,11 +79,49 @@ public class Gui {
 		turn = new JLabel((game.turn) ? "white" : "black"); // change turn indicator
 		
 		frame.add(turn);
-		frame.add(buttons);
+		
+		changeBorder(game.turn);
+		
+//		JPanel west = new JPanel();
+//		west.setBackground(Color.BLACK);
+//		frame.add(west, BorderLayout.WEST);
+//		
+//		JPanel north = new JPanel();
+//		north.setBackground(Color.BLACK);
+//		frame.add(north, BorderLayout.NORTH);
+//		
+//		JPanel east = new JPanel();
+//		east.setBackground(Color.BLACK);
+//		frame.add(east, BorderLayout.EAST);
+//		
+//		JPanel south = new JPanel();
+//		south.setBackground(Color.BLACK);
+//		frame.add(south, BorderLayout.SOUTH);
+		
+		frame.add(buttons, BorderLayout.CENTER);
 		
 		frame.revalidate();
 	}
 	
+	private void changeBorder(Boolean turn) {
+		Color color = turn ? Color.WHITE : Color.BLACK;
+		
+		JPanel west = new JPanel();
+		west.setBackground(color);
+		frame.add(west, BorderLayout.WEST);
+		
+		JPanel north = new JPanel();
+		north.setBackground(color);
+		frame.add(north, BorderLayout.NORTH);
+		
+		JPanel east = new JPanel();
+		east.setBackground(color);
+		frame.add(east, BorderLayout.EAST);
+		
+		JPanel south = new JPanel();
+		south.setBackground(color);
+		frame.add(south, BorderLayout.SOUTH);
+	}
 
 	private class InputListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
