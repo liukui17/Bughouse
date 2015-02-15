@@ -56,9 +56,9 @@ public class Board {
 			board[y][x] = null;
 			board[dy][dx].updatePosition(dx, dy);
 			board[dy][dx].updatePossibleMoves();
-			if (canPromote(dx, dy)) {
-				promotion(board[dy][dx].boolColor(), dx, dy);
-			}
+//			if (canPromote(dx, dy)) {
+//				promotion(board[dy][dx].boolColor(), dx, dy);
+//			}
 			turn = !turn;
 		}
 		return true;
@@ -67,10 +67,8 @@ public class Board {
 	public boolean canPromote(int dx, int dy) {
 		return board[dy][dx].toString().equals("P") && (dy == 7 || dy == 0);
 	}
-
-	private void promotion(boolean color, int dx, int dy) {
-		System.out.println("What would like to promote the pawn to?");
-		String ans = scan.next();
+	
+	public void promotion(boolean color, int dx, int dy, String ans) {
 		if (ans.equals("Q")) {
 			board[dy][dx] = new Queen(dx, dy, color);
 		} else if (ans.equals("N")) {
@@ -83,6 +81,22 @@ public class Board {
 			System.err.println("No such piece.");
 		}
 	}
+
+//	public void promotion(boolean color, int dx, int dy) {
+//		System.out.println("What would like to promote the pawn to?");
+//		String ans = scan.next();
+//		if (ans.equals("Q")) {
+//			board[dy][dx] = new Queen(dx, dy, color);
+//		} else if (ans.equals("N")) {
+//			board[dy][dx] = new Knight(dx, dy, color);
+//		} else if (ans.equals("B")) {
+//			board[dy][dx] = new Bishop(dx, dy, color);
+//		} else if (ans.equals("R")) {
+//			board[dy][dx] = new Rook(dx, dy, color);
+//		} else {
+//			System.err.println("No such piece.");
+//		}
+//	}
 
 	//Castles kingside and returns true if possible to castle
 	// (king and kingside rook have not moved), else does nothing and returns false.
