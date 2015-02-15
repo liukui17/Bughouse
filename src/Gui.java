@@ -5,19 +5,34 @@ import java.awt.event.*; // for events
 import java.util.*;
 
 public class Gui {
+	public static final Color LIGHT_SPACES = Color.WHITE;
+	public static final Color DARK_SPACES = Color.YELLOW;
+	public static final Color SELECTED_PIECE = Color.PINK;
+	
 	public static void main(String[] args) {
-		Gui gui = new Gui();
+		new Gui();
 	}
 	
 	private JFrame frame;
+	private JPanel buttons;
+	private JLabel turn;
+	
 	private Board game;
+	
+	private boolean moving;
+	private ChessButton prev;
 	
 	// constructor
 	public Gui() {
 		frame = new JFrame(); // make frame
-		
+
 		game = new Board(); // construct board
 		game.beginning(); // add the pieces
+		
+		turn = new JLabel(game.turn ? "white" : "black"); // make turn indicator
+		
+		moving = false;
+		prev = null;
 		
 		// set-up frame
 		frame.setTitle("BugHouse");
@@ -27,63 +42,116 @@ public class Gui {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// add board to frame
-		JPanel buttons = new JPanel();
+		buttons = new JPanel();
 		buttons.setSize(300, 300);
 		buttons.setLayout(new GridLayout(8,8));
 		
-		Piece[][] boardArray = game.getBoard();
+		frame.add(turn);
 		
+		drawBoard();  
+		
+		frame.setVisible(true);
+	}
+	
+	public void drawBoard() {
+		buttons.removeAll();
+		frame.remove(turn);
+		
+		Piece[][] boardArray = game.getBoard();
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				JButton space;
 				if (boardArray[i][j] != null) {
-					space = new ChessButton(i, j, boardArray[i][j].toString());
+					space = new ChessButton(i, j, boardArray[i][j], new ImageIcon(boardArray[i][j].imagePath));
 				} else {
-					space = new ChessButton(i, j, "");
+					space = new ChessButton(i, j, null, "");
 				}
-				// if (space[i])
+				if ((i % 2 == 0 && j % 2 != 0) || (i % 2 != 0 && j % 2 == 0)) {
+					space.setBackground(DARK_SPACES);
+				} else {
+					space.setBackground(LIGHT_SPACES);
+				}
 				space.addActionListener(new InputListener());
 				buttons.add(space);
 			}
 		}
+		turn = new JLabel((game.turn) ? "white" : "black"); // change turn indicator
 		
-		Scanner scan = new Scanner(System.in);
-		
-//		for (int i = 0; i < 10; i++) {
-//			int x = scan.nextInt();
-//			int y = scan.nextInt();
-//			int dx = scan.nextInt();
-//			int dy = scan.nextInt();
-//			game.move(x, y, dx, dy);
-//			boardArray = game.getBoard();
-//		} 
-		
+		frame.add(turn);
 		frame.add(buttons);
-		      
-		frame.setVisible(true);
+		
+		frame.revalidate();
 	}
 	
+
 	private class InputListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			ChessButton source = (ChessButton) event.getSource();
 			System.out.println(source.x + " " + source.y);
+			
+			if (source.piece != null && !moving) { // select
+				source.setBackground(SELECTED_PIECE);
+				moving = !moving;
+				prev = source;
+			} else {
+				if (prev != null && source.piece != null && source.piece.equals(prev.piece)) { // deselect
+					// moving = !moving;
+					// prev = null;
+					deselect(source);
+					
+				} else if (prev != null) {
+					try { 
+						if (game.move(game.turn, prev.y, prev.x, source.y, source.x)) { // move
+							moving = !moving;
+							drawBoard();
+						}
+					} catch (InvalidMoveException e) { // invalid move
+						JOptionPane.showMessageDialog(null, "Invalid Move. Try Again");
+						deselect(prev);
+					} catch (NotYourTurnException e) { // not your turn, deselect
+						JOptionPane.showMessageDialog(null, "Not your turn. Try Again");
+						// moving = !moving;
+						deselect(prev);
+						// prev = null;
+					} catch (Exception e) { // unknown exception
+						JOptionPane.showMessageDialog(null, "Unknown exception: REALLY BAD");
+					}
+				} 
+			}
+		}
+		
+		private void deselect(ChessButton source) {
+			moving = !moving;
+			if ((source.x % 2 == 0 && source.y % 2 != 0) || 
+				(source.x % 2 != 0 && source.y % 2 == 0)) {
+				source.setBackground(DARK_SPACES);
+			} else {
+				source.setBackground(LIGHT_SPACES);
+			}
+			prev = null;
 		}
 	}
+
 	
 	public class ChessButton extends JButton{
 		int x;
 		int y;
-		// String display;
-		// Piece piece;
-		// JButton button;
+		Piece piece;
 		
-		public ChessButton(int x, int y, String display) {
+		public ChessButton(int x, int y, Piece piece, Icon display) {
 			super(display);
+
 			this.x = x;
 			this.y = y;
-			// this.display = display;
-			// this.button = button;
-			// this.piece = piece;
+			this.piece = piece;
 		}
-	}
+		
+		public ChessButton(int x, int y, Piece piece, String display) {
+			super(display);
+
+			this.x = x;
+			this.y = y;
+			this.piece = piece;
+		}
+	} 
 }
