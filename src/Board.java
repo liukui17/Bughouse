@@ -45,8 +45,10 @@ public class Board {
 		if (board[dy][dx] != null)
 			capture(dx, dy);
 		if (board[y][x].toString().equals("K") && dx - x == 2) {
+			turn = !turn;
 			return queenSide(x, y);
 		} else if (board[y][x].toString().equals("K") && dx - x == -2) {
+			turn = !turn;
 			return kingSide(x, y);
 		} else {
 			board[dy][dx] = board[y][x];
@@ -58,6 +60,7 @@ public class Board {
 					promotion(board[dy][dx].boolColor(), dx, dy);
 				}
 			}
+			turn = !turn;
 		}
 		return true;
 	}
@@ -286,7 +289,11 @@ public class Board {
 
 	//Returns a String representation of the board, defaults to White's POV
 	public String toString() {
-		return toStringWhite();
+		if (turn) {
+			return toStringWhite();
+		} else {
+			return toStringBlack();
+		}
 	}
 
 	//Returns a String representation of the board from White's POV, i.e. 
@@ -355,6 +362,7 @@ public class Board {
 			for (Piece piece : whitePlaceable) {
 				if (piece.toString().equals(p)) {
 					board[dy][dx] = piece;
+					turn = !turn;
 					return true;
 				}
 			}
@@ -363,6 +371,7 @@ public class Board {
 			for (Piece piece : blackPlaceable) {
 				if (piece.toString().equals(p)) {
 					board[dy][dx] = piece;
+					turn = !turn;
 					return true;
 				}
 			}
@@ -395,7 +404,6 @@ public class Board {
 				worked = move(turn, x, y, dx, dy);
 			}
 			printBoard();
-			turn = !turn;
 		}
 	}
 
