@@ -46,7 +46,7 @@ public class BugHouseServer {
 	// constructor
 	public BugHouseServer(int port) 
 			throws IOException, UnknownHostException {
-		color = false;
+		color = true;
 		server = new ServerSocket(port);
 		clientSocket = server.accept();
 		out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -67,7 +67,7 @@ public class BugHouseServer {
 		// set-up frame
 		frame.setTitle("BugHouse");
 		frame.setSize(800, 800);
-		frame.setLayout(new FlowLayout());
+//		frame.setLayout(new FlowLayout());
 		frame.setLocation(50, 100);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -108,9 +108,32 @@ public class BugHouseServer {
 		turn = new JLabel((game.turn) ? "white" : "black"); // change turn indicator
 		
 		frame.add(turn);
-		frame.add(buttons);
+		
+		changeBorder(game.turn);
+		
+		frame.add(buttons, BorderLayout.CENTER);
 		
 		frame.revalidate();
+	}
+	
+	private void changeBorder(Boolean turn) {
+		Color color = turn ? Color.WHITE : Color.BLACK;
+		
+		JPanel west = new JPanel();
+		west.setBackground(color);
+		frame.add(west, BorderLayout.WEST);
+		
+		JPanel north = new JPanel();
+		north.setBackground(color);
+		frame.add(north, BorderLayout.NORTH);
+		
+		JPanel east = new JPanel();
+		east.setBackground(color);
+		frame.add(east, BorderLayout.EAST);
+		
+		JPanel south = new JPanel();
+		south.setBackground(color);
+		frame.add(south, BorderLayout.SOUTH);
 	}
 
 	private class InputListener implements ActionListener {
@@ -130,10 +153,14 @@ public class BugHouseServer {
 					
 				} else if (prev != null) {
 					try { 
-						if (game.move(game.turn, prev.y, prev.x, source.y, source.x)) { // move
+						if (game.move(color, prev.y, prev.x, source.y, source.x)) { // move
 							//moving = !moving;
 							deselect(source);
-							out.println(prev.x + " " +  prev.y + " " + source.x + " " + source.y);
+							if (game.canPromote(source.y, source.x)) {
+								game.promotion(game.getBoard()[source.x][source.y].boolColor(), source.y, source.x, 
+											   JOptionPane.showInputDialog(null, "What would you like to promote to?"));
+							}
+							out.println(prev.x + " " + prev.y + " " + source.x + " " + source.y);
 							drawBoard();
 						}
 					} catch (InvalidMoveException e) { // invalid move
@@ -151,13 +178,13 @@ public class BugHouseServer {
 			}
 		}
 		
-		private void deselect(ChessButton source) {
+		private void deselect(ChessButton target) {
 			moving = !moving;
-			if ((source.x % 2 == 0 && source.y % 2 != 0) || 
-				(source.x % 2 != 0 && source.y % 2 == 0)) {
-				source.setBackground(DARK_SPACES);
+			if ((target.x % 2 == 0 && target.y % 2 != 0) || 
+				(target.x % 2 != 0 && target.y % 2 == 0)) {
+				target.setBackground(DARK_SPACES);
 			} else {
-				source.setBackground(LIGHT_SPACES);
+				target.setBackground(LIGHT_SPACES);
 			}
 			prev = null;
 		}
