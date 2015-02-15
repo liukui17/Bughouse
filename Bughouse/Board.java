@@ -19,10 +19,21 @@ public class Board {
 		if (!valid(x, y, dx, dy)) {
 			throw new IllegalArgumentException("Invalid Move!");
 		}
+		if (board[dy][dx] != null)
+			capture(dx, dy);
 		board[dy][dx] = board[y][x];
 		board[y][x] = null;
 		board[dy][dx].updatePosition(dx, dy);
 		board[dy][dx].updatePossibleMoves();
+	}
+
+	private void capture(int x, int y) {
+		boolean pcolor = board[y][x].boolColor();
+		if (pcolor) {
+			whiteGrave.put(board[y][x].getPosition(), board[y][x]);
+		} else {
+			blackGrave.put(board[y][x].getPosition(), board[y][x]);
+		}
 	}
 
 	private boolean valid(int x, int y, int dx, int dy) {
